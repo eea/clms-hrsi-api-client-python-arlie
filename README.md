@@ -5,7 +5,7 @@ Python client for accessing the Copernicus Land Monitoring Service ARLIE product
 The other Pan-European snow and ice products by the CLMS are reachable through the Python client https://github.com/eea/clms-hrsi-api-client-python
 
 ## Registration:
-Data are accessible wihtout any registration.
+Data are accessible without any registration.
 
 ## API Url: 
 Users are invited to consult the ICE products user manual available on the Copernicus land portal (https://land.copernicus.eu/)
