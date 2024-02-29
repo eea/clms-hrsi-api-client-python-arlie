@@ -203,31 +203,35 @@ class ArlieRequest(object):
         # Send Get request
         
         req = http_request + "&getonlyids=True"
+        req = http_request
         response = requests.get(req)
         print('Executing request for geometries: %s'%req)
         geometries = []
-        if response:
-            json_root = response.json()
-            if len(json_root) > 70000:
-                print('Big number of polygons requested (%d), please make a request on a smaller area. Maximum size allowed: 70000 polygons'%(len(json_root)))
-                sys.exit(-2)  
-            else:
-                # Read JSON response
-                json_root = {}
-                if request_geometries:
-                    print('Executing request for geometries: %s'%http_request)
-                    response = requests.get(http_request)
-                    if response:
-                        json_root = response.json()
-                        for ii in range(len(json_root)):
-                            geometries.append(json_root[ii].get('j'))
-                        if returnMode == 'csv' or returnMode == 'csv_and_variable':
-                            print("Writing geometries in " + os.path.join(geometriesPath, "geometries.csv"))
-                            with open(os.path.join(geometriesPath, "geometries.csv"), 'w') as f:
-                                f.write('id;geometry;basin_name;eu_hydro_id;object_nam;area;river_km\n')
-                                for ii, p in enumerate(geometries):
-                                    f.write('%s;%s;%s;%s;%s;%s;%s\n'%(p[0],p[1],p[2],p[3],p[4],p[5],p[6]))
-                                f.close()
+        if response.status_code == 414:
+            print('Request-URI Too Large')
+            sys.exit(500) 
+        json_root = response.json()
+        if isinstance(json_root, dict):
+            if json_root['code'] == '0100E':
+                print(json_root['message'])
+                sys.exit(413) 
+        else:
+            # Read JSON response
+            json_root = {}
+            if request_geometries:
+                print('Executing request for geometries: %s'%http_request)
+                response = requests.get(http_request)
+                if response:
+                    json_root = response.json()
+                    for ii in range(len(json_root)):
+                        geometries.append(json_root[ii].get('j'))
+                    if returnMode == 'csv' or returnMode == 'csv_and_variable':
+                        print("Writing geometries in " + os.path.join(geometriesPath, "geometries.csv"))
+                        with open(os.path.join(geometriesPath, "geometries.csv"), 'w', encoding='utf8') as f:
+                            f.write('id;geometry;basin_name;eu_hydro_id;object_nam;area;river_km\n')
+                            for ii, p in enumerate(geometries):
+                                f.write('%s;%s;%s;%s;%s;%s;%s\n'%(p[0],p[1],p[2],p[3],p[4],p[5],p[6]))
+                            f.close()
 
         # Return the geometries list
         return geometries        
@@ -270,19 +274,7 @@ def download_arlie_products(returnMode, outputDir=None, startDate=None, completi
     if (returnMode == 'csv' or returnMode == 'csv_and_variable'):
         if outputDir is None:
             logging.error("outputDir must be specified")
-            sys.exit(-2)
-            
-    if startDate == None:
-        logging.error('Error: you must specify startDate argument')
-        sys.exit(-2)
-        
-    if completionDate == None:
-        logging.error('Error: you must specify completionDate argument')
-        sys.exit(-2)
-        
-    if geometryWkt == None:
-        logging.error('Error: you must specify geometryWkt argument')
-        sys.exit(-2)
+            sys.exit(-2) 
 
     arlie = ArlieRequest(outputDir)
 
