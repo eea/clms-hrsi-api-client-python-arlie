@@ -1,18 +1,20 @@
 # Python client for accessing the Copernicus Land Monitoring Service (CLMS) ARLIE products
 
-Python client for accessing the Copernicus Land Monitoring Service ARLIE products by means of REST calls.
+Python client for accessing the CLMS Aggregated River and Lake Ice Extent products by means of REST calls.
 
 The other Pan-European snow and ice products by the CLMS are reachable through the Python client https://github.com/eea/clms-hrsi-api-client-python
 
 ## Registration:
-Data are accessible wihtout any registration.
+Data are accessible without any registration.
 
 ## API Url: 
-Users are invited to consult the ICE products user manual available on the Copernicus land portal (https://land.copernicus.eu/)
+Users are invited to consult the ICE products user manual available on the Copernicus land portal for details on how to use the API (https://land.copernicus.eu/en/products/water-bodies/high-resolution-aggregated-river-and-lake-ice-extent).
 
-For requesting ARLIE products: https://cryo.land.copernicus.eu/arlie/get_arlie
+To request ARLIE statistics, the url to use is the following "https://cryo.land.copernicus.eu/arlie/get_arlie". It must be accompanied by several arguments. Eg: 
+https://cryo.land.copernicus.eu/arlie/get_arlie?geometrywkt=POLYGON((6.591757812499995+47.438190548539666%2C12.172812499999997+47.734590790703436%2C12.172812499999997+45.347199858490285%2C6.240195312499996+45.28539584046706%2C6.591757812499995+47.438190548539666))&cloudcoveragemax=100&startdate=2016-10-01&completiondate=2017-03-31
 
-For requesting geometries relatives to the ARLIE products: https://cryo.land.copernicus.eu/arlie/get_geometries
+To request the description of the geometries on which ARLIE statistics are computed, the url to use if the following "https://cryo.land.copernicus.eu/arlie/get_geometries". It must be accompanied by several arguments.
+Eg.: https://cryo.land.copernicus.eu/arlie/get_geometries?geometrywkt=POLYGON((6.591757812499995+47.438190548539666%2C12.172812499999997+47.734590790703436%2C12.172812499999997+45.347199858490285%2C6.240195312499996+45.28539584046706%2C6.591757812499995+47.438190548539666))&getonlyids=False
 
 ## Example:
 
